@@ -12,7 +12,7 @@ public class Example {
 
 class Person {
   // final means it can only be initialized once.
-  private String name = "Luis";
+  final private String name;
   int age = 19;
   String gender = "male";
   boolean married = false;
@@ -28,13 +28,14 @@ class Person {
 
   // Method to get the Name
   public String getName () {
-    return name;
+    return this.name;
   }
 
   // Metho to get the Age
   public int getAge () {
-    return age;
+    return this.age;
   }
+
 }
 
 
