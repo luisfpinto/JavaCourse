@@ -1,20 +1,10 @@
-/**
- * example
- */
-public class Example {
-
-  public static void main(String[] args) {
-    Person luis = new Person("Fernando", 21, "female", false);
-    System.out.printf("The name of the person is %s and he is %s %n", 
-    luis.getName(), luis.getAge());
-  }
-}
-
 class Person {
   // final means it can only be initialized once.
   final private String name;
+  // We use the following syntax to declare constants
+  public static final int MAX_AGE = 100;
   int age = 19;
-  String gender = "male";
+  public String gender;
   boolean married = false;
 
   // Constructors have the same name of the class but they  don't have a return type
@@ -25,17 +15,17 @@ class Person {
     this.gender = gender;
     this.married = married;
   }
-
-  // Method to get the Name
+  // When we declare a method we specified the privacy + the returned value
   public String getName () {
     return this.name;
   }
 
-  // Metho to get the Age
   public int getAge () {
     return this.age;
   }
 
+  // When declaring a method which doesn't return anything we use void
+  public void changeGender () {
+    this.gender = this.gender.equals("male") ? "female" : "male";
+  }
 }
-
-
