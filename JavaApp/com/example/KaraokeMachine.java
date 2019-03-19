@@ -2,10 +2,14 @@ package com.example;
 import java.io.InputStreamReader;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.HashMap;
+
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Map;
+import java.util.Queue;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.ArrayDeque;
+
 import com.example.model.SongBook;
 import com.example.model.Song;
 /**
@@ -15,13 +19,16 @@ public class KaraokeMachine {
   private SongBook songbook;
   private BufferedReader reader;
   private Map<String, String> menu;
+  private Queue<Song> songQueue;
   public KaraokeMachine(SongBook songbook) {
     this.songbook = songbook;
     // This reader will be in charge of reading the user input
     reader = new BufferedReader(new InputStreamReader(System.in));
+    songQueue = new ArrayDeque<>();
     menu = new HashMap<String, String>();
-    menu.put("Add", "Add a new song to the song book");
-    menu.put("Artist", "Select a song by artist");
+    menu.put("add", "Add a new song to the song book");
+    menu.put("choose", "Select a song by artist and add it to the queue");
+    menu.put("play", "Play the next song in the queue");
     menu.put("Quit", "Exit application");
   }
 
@@ -54,7 +61,12 @@ public class KaraokeMachine {
          List<Song> songs = this.songbook.getSongsForArtist(selectedArtist);
          Song selectedSong = promptSong(songs);
          System.out.printf("Your selected son was %s", selectedSong);
+         // Now we add the selected song to the queue
+         this.songQueue.add(selectedSong);
          break;
+        case "PLAY":
+          playNext();
+          break;
         case "QUIT":
           System.out.print("Exiting\n");
           break;
@@ -85,7 +97,8 @@ public class KaraokeMachine {
   }
 
   private Song promptSong(List<Song> songs) throws IOException {
-    System.out.printf("What song do you want? \n");
+    System.out.printf("There are %d options available. There are %d in the queue \n",
+    songs.size(), this.songQueue.size());
     List<String> songTitles = new ArrayList<>();
     for (Song song : songs) {
       songTitles.add(song.getTitle());
@@ -102,5 +115,16 @@ public class KaraokeMachine {
     }
     String choice = reader.readLine();
     return Integer.parseInt(choice) -1;
+  }
+
+  public void playNext() {
+    Song song = this.songQueue.poll();
+    if(song == null) {
+      System.out.printf("There are no more songs in the queue, please add a new song\n");
+    } else {
+      System.out.printf("\n\n Open %s to hear %s by %s", song.getURL(), 
+      song.getTitle(), 
+      song.getArtist());
+    }
   }
 } 
