@@ -8,7 +8,10 @@ import com.example.KaraokeMachine;
 public class Karaoke {
   public static void main(String[] args) {
     SongBook songBook = new SongBook();
+    songBook.importSongBook("songbook.txt");
     KaraokeMachine karaokeMachine = new KaraokeMachine(songBook);
     karaokeMachine.run();
+    System.out.println("Saving book \n");
+    songBook.exportSongBook("songbook.txt");
   }
 }

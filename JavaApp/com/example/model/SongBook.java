@@ -1,9 +1,12 @@
 package com.example.model;
+
+import java.io.*;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.HashMap;
+import java.util.TreeMap;
 import java.util.Set;
+import java.util.Comparator;
 
 import com.example.model.Song;
 
@@ -14,6 +17,36 @@ public class SongBook {
   
   public SongBook() {
     songs = new ArrayList<Song>();
+  }
+
+  public void exportSongBook(String fileName) {
+    try{
+      FileOutputStream fos = new FileOutputStream(fileName);
+      PrintWriter writer = new PrintWriter(fos);
+      for (Song song: songs) {
+        writer.printf("%s|%s|%s \n",
+        song.getArtist(),
+        song.getTitle(),
+        song.getURL());
+      }
+      writer.close();
+    } catch (IOException ioe) {
+      ioe.printStackTrace();
+    }
+  }
+
+  public void importSongBook(String fileName) {
+    try{
+      FileInputStream fis = new FileInputStream(fileName);
+      BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
+      String line;
+      while((line = reader.readLine()) != null) {
+        String[] args = line.split("\\|");
+        addSong(new Song(args[0], args[1], args[2]));
+      }
+    } catch (IOException ioe){
+      ioe.printStackTrace();
+    }
   }
   
   public void addSong(Song song) {
@@ -35,7 +68,7 @@ public class SongBook {
   private Map<String, List<Song>> byArtist () {
     // We can use <> at the end so it will take the same parameters which are on
     // the left.
-    Map<String, List<Song>> byArtist = new HashMap<>(); 
+    Map<String, List<Song>> byArtist = new TreeMap<>(); 
     for (Song song: this.songs) {
       List<Song> artistSongs = byArtist.get(song.getArtist());
       // If that artist list wasn't previously created, we create a new one
@@ -53,6 +86,16 @@ public class SongBook {
   }
 
   public List<Song> getSongsForArtist(String artist) {
-    return byArtist().get(artist);
+    List <Song> songs = byArtist().get(artist);
+    songs.sort(new Comparator<Song>() {
+      @Override
+      public int compare(Song song1, Song song2) {
+        if(song1.equals(song2)) {
+          return 0;
+        }
+        return song1.title.compareTo(song2.title);
+      }
+    });
+    return songs;
   }
 }

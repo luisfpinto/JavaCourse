@@ -1,9 +1,9 @@
 package com.example.model;
 
 public class Song {
-  private String artist;
-  private String title;
-  private String videoURL;
+  protected String artist; //SongBook uses these variables.
+  protected String title;
+  protected String videoURL;
 
   public Song(String artist, String title, String videoURL) {
     this.artist = artist;

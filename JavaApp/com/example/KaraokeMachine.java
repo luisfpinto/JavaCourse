@@ -29,7 +29,7 @@ public class KaraokeMachine {
     menu.put("add", "Add a new song to the song book");
     menu.put("choose", "Select a song by artist and add it to the queue");
     menu.put("play", "Play the next song in the queue");
-    menu.put("Quit", "Exit application");
+    menu.put("quit", "Exit application");
   }
 
   // We need to tell the compiler that the exception is going to be catched in 
@@ -48,15 +48,16 @@ public class KaraokeMachine {
     String choice = ""; 
     do {
       try {
+      System.out.printf("There are %d songs available. There are %d in the queue \n", songbook.getSongCount(),
+      this.songQueue.size());
       choice = promptAction();
-      System.out.printf("****** %s \n", choice);
       switch(choice.toUpperCase()) {
         case "ADD":
           Song song = addNewSong();
           this.songbook.addSong(song);
           System.out.print("New song added\n");
           break;
-        case "ARTIST":
+        case "CHOOSE":
          String selectedArtist = promptArtist();
          List<Song> songs = this.songbook.getSongsForArtist(selectedArtist);
          Song selectedSong = promptSong(songs);
@@ -97,8 +98,6 @@ public class KaraokeMachine {
   }
 
   private Song promptSong(List<Song> songs) throws IOException {
-    System.out.printf("There are %d options available. There are %d in the queue \n",
-    songs.size(), this.songQueue.size());
     List<String> songTitles = new ArrayList<>();
     for (Song song : songs) {
       songTitles.add(song.getTitle());
@@ -122,7 +121,7 @@ public class KaraokeMachine {
     if(song == null) {
       System.out.printf("There are no more songs in the queue, please add a new song\n");
     } else {
-      System.out.printf("\n\n Open %s to hear %s by %s", song.getURL(), 
+      System.out.printf("\n\n Open %s to hear %s by %s \n\n", song.getURL(), 
       song.getTitle(), 
       song.getArtist());
     }
